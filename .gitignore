@@ -1,0 +1,8 @@
+.cache/
+bin/
+coverage.out
+*.log
+.idea/
+.DS_Store
+config.bat
+node_modules
