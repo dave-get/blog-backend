@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Go Blog Backend: Beginner Handbook</title>
+<style>
+:root{--ink:#17201b;--muted:#5c6761;--paper:#f6f8f4;--surface:#fff;--line:#d8ded8;--green:#17634a;--dark:#17251f;--amber:#b3621e;--blue:#285fa8;--soft:#edf4ff;--warn:#fff3e5;--code:#19231f}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.68 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:0}
+a{color:var(--green);text-underline-offset:3px}code,pre{font-family:"Cascadia Code",Consolas,monospace}:target{scroll-margin-top:20px}
+.layout{display:grid;grid-template-columns:285px minmax(0,1fr);min-height:100vh}aside{position:sticky;top:0;height:100vh;overflow:auto;padding:28px 22px;color:#eef5f1;background:var(--dark)}
+.brand{margin-bottom:23px}.brand strong{display:block;font-size:20px}.brand span{color:#a9bcb2;font-size:13px}.track{height:3px;margin-top:16px;background:#35483f}.progress{width:0;height:100%;background:#e4a15e}
+nav{display:grid;gap:2px}nav p{margin:0 0 8px;color:#93a79d;font-size:11px;font-weight:700;text-transform:uppercase}nav a{padding:6px 8px;color:#cbd8d1;border-left:2px solid transparent;text-decoration:none;font-size:13px;line-height:1.3}nav a:hover,nav a.active{color:#fff;border-left-color:#e4a15e;background:#203129}
+main{min-width:0}.hero{padding:68px max(5vw,32px) 54px;color:#f6fbf8;background:#1d4b39;border-bottom:6px solid #d48035}.hero-inner,.content{width:min(920px,100%);margin:auto}
+.eyebrow{margin:0 0 11px;color:#c7ddd2;font-size:13px;font-weight:700;text-transform:uppercase}h1{margin:0;max-width:800px;font-size:clamp(38px,6vw,66px);line-height:1.04;letter-spacing:0}.lead{max-width:770px;margin:23px 0 0;color:#dcebe3;font-size:20px}.meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:26px;color:#bed1c7;font-size:14px}
+.content{padding:20px 36px 88px}section{padding:43px 0 12px;border-bottom:1px solid var(--line)}section:last-child{border:0}h2{margin:0 0 15px;font-size:31px;line-height:1.2}h3{margin:31px 0 8px;font-size:21px;line-height:1.3}h4{margin:20px 0 7px;font-size:17px}p{margin:9px 0 15px}ul,ol{padding-left:24px}li{margin:6px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:21px 0}.panel{padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:0 2px 8px rgba(23,32,27,.04)}.panel h3,.panel h4{margin-top:0}.number{display:grid;width:28px;height:28px;margin-bottom:10px;place-items:center;color:#fff;background:var(--green);border-radius:50%;font-size:13px;font-weight:700}
+.note,.warning,.important{margin:21px 0;padding:16px 18px;border-left:4px solid;border-radius:0 5px 5px 0}.note{background:var(--soft);border-color:var(--blue)}.warning{background:var(--warn);border-color:var(--amber)}.important{background:#fff0ee;border-color:#a33b33}.note strong,.warning strong,.important strong{display:block}
+pre{overflow:auto;margin:18px 0 23px;padding:20px;color:#e5eee9;background:var(--code);border:1px solid #2c3933;border-radius:6px;font-size:13px;line-height:1.6}:not(pre)>code{padding:2px 5px;color:#7b3512;background:#f1e8df;border-radius:3px;font-size:.9em}
+.diagram{margin:23px 0;padding:23px;background:#eef1ec;border:1px solid var(--line);border-radius:6px}.flow{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:8px}.box{flex:1 1 125px;padding:14px 9px;text-align:center;background:#fff;border:1px solid #bdc8c1;border-radius:5px}.box strong{display:block;color:#123f31}.arrow{display:grid;place-items:center;color:var(--amber);font-size:24px;font-weight:700}.caption{margin:11px 0 0;color:var(--muted);text-align:center;font-size:13px}
+.tree{padding:20px;color:#dce8e1;background:#202a25;border-radius:6px;white-space:pre;overflow:auto;font:13px/1.7 "Cascadia Code",Consolas,monospace}.folder{color:#f1bd7c}.file{color:#9cc8f2}
+.endpoint{display:grid;grid-template-columns:70px minmax(190px,1fr) 1.4fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.method{width:max-content;padding:2px 7px;color:#fff;background:var(--blue);border-radius:3px;font-size:12px;font-weight:800}.post{background:var(--green)}.put{background:var(--amber)}.delete{background:#a33b33}.path{overflow-wrap:anywhere;font:13px "Cascadia Code",Consolas,monospace}
+.check{list-style:none;padding:0}.check li{position:relative;padding-left:28px}.check li:before{content:"";position:absolute;left:0;top:.42em;width:15px;height:15px;background:#fff;border:2px solid var(--green);border-radius:3px}.muted{color:var(--muted)}footer{padding:28px;color:#dae6df;background:var(--dark);text-align:center;font-size:13px}.menu{display:none}
+@media(max-width:900px){.layout{display:block}aside{position:fixed;z-index:10;left:-305px;width:285px;transition:left .2s;box-shadow:0 8px 24px #0004}aside.open{left:0}.menu{display:block;position:fixed;z-index:11;right:14px;bottom:14px;width:46px;height:46px;color:#fff;background:var(--green);border:0;border-radius:6px;font-size:20px}.hero{padding:54px 24px 43px}.content{padding:14px 22px 68px}}
+@media(max-width:620px){body{font-size:15px}.grid{grid-template-columns:1fr}h1{font-size:39px}h2{font-size:27px}.endpoint{grid-template-columns:62px 1fr}.endpoint span:last-child{grid-column:1/-1}.arrow{flex-basis:100%;height:18px;transform:rotate(90deg)}}
+@media print{.layout{display:block}aside,.menu{display:none!important}.hero{padding:35px;color:var(--ink);background:#fff;border-bottom:2px solid}.hero .lead,.meta,.eyebrow{color:var(--ink)}.content{width:100%;padding:10px 28px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside id="sidebar"><div class="brand"><strong>Go Blog Backend</strong><span>From zero to a working API</span><div class="track"><div class="progress" id="progress"></div></div></div>
+<nav id="toc"><p>Contents</p>
+<a href="#start">Start here</a><a href="#backend">Backend basics</a><a href="#go">Go concepts</a><a href="#architecture">Architecture</a><a href="#folders">Folder structure</a><a href="#flow">Request lifecycle</a><a href="#database">Database</a><a href="#setup">Run the project</a><a href="#api">Use the API</a><a href="#build">Build it yourself</a><a href="#testing">Testing</a><a href="#security">Security</a><a href="#production">Production</a><a href="#mistakes">Mistakes</a><a href="#next">Next features</a><a href="#checklist">Checklist</a><a href="#glossary">Glossary</a>
+</nav></aside>
+<main>
+<header class="hero"><div class="hero-inner"><p class="eyebrow">Beginner handbook</p><h1>Building a Blog Backend with Go</h1><p class="lead">What every part of this project does, why it exists, how requests move through it, and how to build your next backend yourself.</p><div class="meta"><span>Module: <strong>blog</strong></span><span>Go 1.23+</span><span>PostgreSQL</span><span>REST + JSON</span></div></div></header>
+<article class="content">
+<section id="start"><h2>Start Here</h2>
+<p>Do not try to memorize every file. First understand the path one request follows. Then trace a feature from its HTTP route to its service, repository interface, SQL implementation, and response.</p>
+<div class="grid"><div class="panel"><span class="number">1</span><h3>Understand</h3><p>Learn HTTP, JSON, Go packages, SQL, and the responsibilities of each layer.</p></div><div class="panel"><span class="number">2</span><h3>Run</h3><p>Start PostgreSQL, migrate it, configure the process, and launch <code>cmd/api</code>.</p></div><div class="panel"><span class="number">3</span><h3>Trace</h3><p>Call one endpoint and follow every function it uses.</p></div><div class="panel"><span class="number">4</span><h3>Change</h3><p>Add one small feature and tests, such as <code>GET /v1/me</code>.</p></div></div>
+<div class="note"><strong>Already implemented</strong>Registration, login, JWT authentication, posts, tags, comments, migrations, Docker files, configuration, health checks, graceful shutdown, and service tests.</div>
+<div class="warning"><strong>Still needed for a larger product</strong>Refresh tokens, password reset, email verification, uploads, category administration endpoints, search, rate limiting, jobs, and database integration tests.</div>
+</section>
+
+<section id="backend"><h2>Backend Basics</h2>
+<p>A backend listens for network requests, validates them, applies business rules, reads or changes permanent data, and returns a response. Its client may be a website, phone app, or another service.</p>
+<div class="diagram"><div class="flow"><div class="box"><strong>Client</strong>Browser or app</div><div class="arrow">&#8594;</div><div class="box"><strong>HTTP API</strong>Routes and JSON</div><div class="arrow">&#8594;</div><div class="box"><strong>Services</strong>Rules and access</div><div class="arrow">&#8594;</div><div class="box"><strong>Database</strong>Stored records</div></div><p class="caption">Responses return through the same layers in reverse.</p></div>
+<h3>Important HTTP terms</h3><ul><li><strong>Route:</strong> a method and path such as <code>POST /v1/posts</code>.</li><li><strong>Request:</strong> headers, URL values, query values, and optionally JSON.</li><li><strong>Response:</strong> a status, headers, and usually JSON.</li><li><strong>Middleware:</strong> logic around handlers: authentication, logging, timeout, recovery.</li><li><strong>REST:</strong> URLs model resources and HTTP methods describe actions.</li></ul>
+<div class="grid"><div class="panel"><h4>Success</h4><p><code>200</code> read/update, <code>201</code> created, <code>204</code> deleted without a body.</p></div><div class="panel"><h4>Client errors</h4><p><code>400</code> invalid, <code>401</code> unauthenticated, <code>403</code> forbidden, <code>404</code> missing, <code>409</code> conflict.</p></div></div>
+</section>
+
+<section id="go"><h2>Go Concepts Used Here</h2>
+<h3>Modules and packages</h3><p><code>go.mod</code> names the whole module <code>blog</code>. Each directory is a package, so the service import is <code>blog/internal/service</code>. For a public repository, prefer <code>github.com/yourname/blog-api</code>.</p>
+<pre><code>go mod init github.com/yourname/blog-api
+go mod tidy</code></pre>
+<h3>Structs and JSON tags</h3><p>Structs group fields into entities such as User and Post. JSON tags define property names. The password hash uses a dash tag so it is never serialized.</p>
+<h3>Interfaces</h3><p>A repository interface describes storage behavior without selecting PostgreSQL. Services depend on this contract, and tests can provide small fake implementations.</p>
+<pre><code>type UserRepository interface {
+    Create(context.Context, *User) error
+    ByEmail(context.Context, string) (*User, error)
+}</code></pre>
+<h3>Methods, pointers, errors, context</h3><ul><li>A receiver makes a function a method, for example <code>func (s *Auth) Login</code>.</li><li><code>*User</code> is a pointer to a shared value instead of a copy.</li><li>Errors are returned values and must be handled explicitly.</li><li><code>errors.Is</code> safely checks wrapped domain errors.</li><li><code>context.Context</code> carries cancellation and deadlines through requests and queries.</li></ul>
+<div class="important"><strong>Avoid mutable global request state</strong>Go handles requests concurrently. Pass dependencies through constructors and request data through arguments or context.</div>
+</section>
+
+<section id="architecture"><h2>Architecture</h2>
+<p>This is a <strong>modular monolith</strong>: one deployable process and database with internal boundaries. This is a strong default and much simpler to operate than early microservices.</p>
+<div class="diagram"><div class="flow"><div class="box"><strong>Transport</strong>httpapi</div><div class="arrow">&#8594;</div><div class="box"><strong>Application</strong>service</div><div class="arrow">&#8594;</div><div class="box"><strong>Contracts</strong>domain</div><div class="arrow">&#8592;</div><div class="box"><strong>Adapter</strong>postgres</div></div><p class="caption">Dependencies point inward. Domain does not know about HTTP or PostgreSQL.</p></div>
+<div class="grid"><div class="panel"><h3>Domain</h3><p>Entities, stable errors, and repository contracts.</p></div><div class="panel"><h3>Services</h3><p>Validation, hashing, tokens, publishing, pagination, and permissions.</p></div><div class="panel"><h3>Repositories</h3><p>Parameterized SQL, transactions, and database error mapping.</p></div><div class="panel"><h3>Transport</h3><p>Routes, JSON, bearer authentication, and HTTP statuses.</p></div></div>
+<p>Thin handlers are easier to test and change. Business rules remain independent of HTTP and SQL. Do not add abstractions without a real responsibility; this project intentionally avoids generic repositories, event buses, and microservices.</p>
+</section>
+
+<section id="folders"><h2>Folder Structure</h2>
+<div class="tree"><span class="folder">cmd/api/</span>
+  <span class="file">main.go</span>                  wiring, server, shutdown
+<span class="folder">internal/</span>
+  <span class="folder">config/</span>                environment configuration
+  <span class="folder">domain/</span>                entities, errors, contracts
+  <span class="folder">service/</span>               application rules
+  <span class="folder">repository/postgres/</span>   SQL implementations
+  <span class="folder">platform/database/</span>     connection pool
+  <span class="folder">transport/httpapi/</span>     routing, middleware, JSON
+<span class="folder">migrations/</span>              versioned schema
+<span class="folder">docs/</span>                    guides and API reference
+<span class="file">go.mod / go.sum</span>            module and dependency locks
+<span class="file">Dockerfile / compose.yaml</span>   local containers
+<span class="file">Makefile / .env.example</span>     developer commands and config</div>
+<p>Go enforces the <code>internal</code> boundary, so outside modules cannot import these private packages. <code>main.go</code> stays small because it only constructs dependencies and controls process lifecycle.</p>
+</section>
+
+<section id="flow"><h2>One Request End to End</h2>
+<p>For <code>POST /v1/posts</code>:</p><ol><li>Chi matches the method and route.</li><li>Middleware adds request ID, client IP, recovery, timeout, logging, and JWT verification.</li><li>JWT claims provide the authenticated user ID and role.</li><li>The handler limits the body to 1 MiB, rejects unknown JSON fields, and creates a service input.</li><li>The service validates fields, creates UUID and slug, normalizes tags, sets publication time, and enforces rules.</li><li>It calls the domain repository interface.</li><li>The PostgreSQL adapter begins a transaction, inserts the post and tags, then commits.</li><li>The handler returns JSON with <code>201 Created</code>.</li></ol>
+<h3>Dependency injection</h3><p><code>main.go</code> constructs repositories and passes them into services. Services never open their own database. This makes dependencies visible and replaceable in tests.</p>
+<pre><code>users := postgresrepo.NewUsers(db)
+posts := postgresrepo.NewPosts(db)
+tokens := service.NewTokenManager(secret, tokenTTL)
+
+authService := service.NewAuth(users, tokens)
+postService := service.NewPosts(posts)</code></pre>
+</section>
+
+<section id="database"><h2>Database Design</h2>
+<ul><li><code>users</code>: identity, bcrypt hash, display name, role.</li><li><code>posts</code>: content, author, category, status, slug, timestamps.</li><li><code>categories</code>: optional classification for a post.</li><li><code>tags</code> and <code>post_tags</code>: reusable many-to-many labels.</li><li><code>comments</code>: responses belonging to one user and post.</li></ul>
+<p>Constraints reject duplicate email addresses and slugs, invalid statuses and roles, and published posts without a publication time. Multi-table post/tag writes use a transaction, so partial changes roll back.</p>
+<p>Indexes support public feeds, author/category queries, and visible comments. Add indexes for measured query patterns and verify them with <code>EXPLAIN ANALYZE</code>.</p>
+<div class="important"><strong>Never edit an applied production migration</strong>Create a new numbered migration. Changing old history makes environments disagree.</div>
+</section>
+
+<section id="setup"><h2>Run the Project</h2>
+<h3>Docker Compose</h3><p>Install and start Docker Desktop, then run from the repository:</p>
+<pre><code>docker compose up --build</code></pre>
+<p>This starts PostgreSQL, waits for health, applies migrations, builds the API, and exposes <code>http://localhost:8080</code>.</p>
+<pre><code>docker compose down
+docker compose down -v   # also permanently deletes local data</code></pre>
+<h3>Local Go and PostgreSQL</h3><ol><li>Install Go 1.23+ and verify <code>go version</code>.</li><li>Install PostgreSQL and create the blog database/user.</li><li>Apply <code>migrations/000001_init.up.sql</code>.</li><li>Copy <code>.env.example</code> to <code>.env</code> and update its values. This project loads that file automatically; real process environment variables take precedence.</li><li>Run dependencies and the API.</li></ol>
+<h4>PowerShell</h4>
+<pre><code>$env:HTTP_ADDRESS = ":8080"
+$env:DATABASE_URL = "postgres://blog:blog@localhost:5432/blog?sslmode=disable"
+$env:JWT_SECRET = "replace-this-with-a-long-random-secret"
+go mod download
+go run ./cmd/api</code></pre>
+<p><code>DATABASE_URL</code> and <code>JWT_SECRET</code> are required. The secret needs 32+ characters. Other settings control token lifetime, server address, connection pool size, and shutdown timeout.</p>
+</section>
+
+<section id="api"><h2>Use the API</h2>
+<div class="endpoint"><span class="method">GET</span><span class="path">/healthz</span><span>Database readiness.</span></div>
+<div class="endpoint"><span class="method post">POST</span><span class="path">/v1/auth/register</span><span>Create author and token.</span></div>
+<div class="endpoint"><span class="method post">POST</span><span class="path">/v1/auth/login</span><span>Verify credentials.</span></div>
+<div class="endpoint"><span class="method">GET</span><span class="path">/v1/posts</span><span>Published feed.</span></div>
+<div class="endpoint"><span class="method">GET</span><span class="path">/v1/posts/{slug}</span><span>Published post.</span></div>
+<div class="endpoint"><span class="method post">POST</span><span class="path">/v1/posts</span><span>Create; token required.</span></div>
+<div class="endpoint"><span class="method put">PUT</span><span class="path">/v1/posts/{postID}</span><span>Replace; owner/admin.</span></div>
+<div class="endpoint"><span class="method delete">DELETE</span><span class="path">/v1/posts/{postID}</span><span>Delete; owner/admin.</span></div>
+<div class="endpoint"><span class="method">GET</span><span class="path">/v1/posts/{postID}/comments</span><span>Visible comments.</span></div>
+<div class="endpoint"><span class="method post">POST</span><span class="path">/v1/posts/{postID}/comments</span><span>Add; token required.</span></div>
+<h3>Try the workflow</h3>
+<pre><code>POST http://localhost:8080/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "author@example.com",
+  "display_name": "First Author",
+  "password": "strong-password"
+}</code></pre>
+<p>Copy <code>access_token</code> from the response:</p>
+<pre><code>POST http://localhost:8080/v1/posts
+Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+{
+  "title": "My first Go article",
+  "excerpt": "What I learned",
+  "content": "The full article body.",
+  "status": "published",
+  "category_id": null,
+  "tags": ["Go", "Backend"]
+}</code></pre>
+<p>Then call <code>GET /v1/posts</code>. It is public and only returns published content.</p>
+</section>
+
+<section id="build"><h2>Build It Yourself Next Time</h2>
+<p>Build vertical working slices. Every step should leave the application compiling.</p>
+<ol><li><strong>Requirements:</strong> define users, roles, resources, permissions, public/private data, and non-goals.</li><li><strong>API contract:</strong> decide routes, fields, statuses, and errors.</li><li><strong>Data model:</strong> decide tables, relationships, constraints, deletion behavior, and indexes.</li><li><strong>Module:</strong> run <code>go mod init</code> and create <code>cmd/api/main.go</code>.</li><li><strong>Configuration:</strong> validate required values at startup.</li><li><strong>Domain:</strong> create types, errors, and repository interfaces for one feature.</li><li><strong>Service:</strong> write business behavior and unit tests with fakes.</li><li><strong>Repository:</strong> add parameterized SQL, transactions, and error mapping.</li><li><strong>Transport:</strong> decode, call service, encode; keep handlers thin.</li><li><strong>Wiring:</strong> construct concrete dependencies in main.</li><li><strong>Verification:</strong> format, test, vet, then repeat.</li><li><strong>Integration:</strong> prove migrations and SQL against disposable PostgreSQL.</li></ol>
+<pre><code>health -> registration -> login -> authentication
+-> create post -> public reads -> ownership updates
+-> comments -> administration -> production hardening</code></pre>
+<h3>Ask before coding</h3><ul><li>Who may perform this operation?</li><li>Which fields are required, optional, unique, or immutable?</li><li>What happens under concurrent requests?</li><li>Does it need a transaction?</li><li>Could private data leak?</li><li>What errors should callers receive?</li><li>How will success and failure be tested?</li><li>How does the schema migrate and roll back?</li></ul>
+</section>
+
+<section id="testing"><h2>Testing</h2>
+<p><code>internal/service/service_test.go</code> uses fake repositories to test normalization, bcrypt, JWT claims, validation, post publication, tags, and ownership without PostgreSQL.</p>
+<pre><code>go test ./...
+go test -cover ./...
+go test ./internal/service -run TestCreatePublishedPost
+go test -race ./...   # requires CGO/C compiler</code></pre>
+<p>Add real PostgreSQL tests for constraints, transactions, cascades, ordering, visibility, and pagination. Add <code>httptest</code> coverage for status codes, auth, body limits, and error JSON.</p>
+<div class="note"><strong>Testing pyramid</strong>Use many fast service tests, focused repository integration tests, and fewer end-to-end tests for critical user journeys.</div>
+</section>
+
+<section id="security"><h2>Security</h2>
+<div class="grid"><div class="panel"><h3>Passwords</h3><p>Never store or log plaintext. Use bcrypt and never serialize hashes.</p></div><div class="panel"><h3>Authorization</h3><p>Authentication identifies a user; authorization checks access to this resource.</p></div><div class="panel"><h3>SQL</h3><p>Use placeholders such as <code>$1</code>. Never concatenate request data.</p></div><div class="panel"><h3>Secrets</h3><p>Keep passwords and keys out of Git and use a secret manager.</p></div></div>
+<ul><li>Use HTTPS in production.</li><li>Use short access tokens and rotating refresh tokens for long sessions.</li><li>Rate-limit login, registration, and comments.</li><li>Do not expose internal SQL errors.</li><li>Restrict browser CORS to trusted origins.</li><li>Validate maximum content length.</li><li>Scan dependencies and images.</li><li>Back up PostgreSQL and prove restoration works.</li></ul>
+<div class="important"><strong>Before public launch</strong>Add rate limiting, refresh-token revocation, email verification, password reset, and signing-key rotation.</div>
+</section>
+
+<section id="production"><h2>Production</h2>
+<ol><li>Build immutable images in CI.</li><li>Run format, vet, tests, race detection, vulnerability, and migration checks.</li><li>Use managed PostgreSQL with TLS, backups, monitoring, and recovery.</li><li>Keep secrets in a platform secret manager.</li><li>Run migrations as a controlled release step.</li><li>Terminate HTTPS at a trusted proxy/load balancer.</li><li>Run multiple stateless API instances.</li><li>Collect structured logs, metrics, traces, errors, latency, and pool statistics.</li><li>Configure liveness and readiness; <code>/healthz</code> is database-backed readiness.</li><li>Practice rollback.</li></ol>
+<p>For schema changes, use expand-and-contract: add compatible schema, deploy compatible code, backfill, switch reads, then remove old schema in a later release.</p>
+</section>
+
+<section id="mistakes"><h2>Common Mistakes</h2>
+<ul><li>Putting everything in <code>main.go</code>.</li><li>Ignoring returned errors.</li><li>Accepting author ID from JSON instead of verified claims.</li><li>Authenticating without checking resource ownership.</li><li>Returning drafts in public queries.</li><li>Concatenating SQL.</li><li>Missing request and shutdown timeouts.</li><li>Unbounded pagination.</li><li>Logging secrets or tokens.</li><li>Editing applied migrations.</li><li>Starting with microservices.</li><li>Adding abstractions without a real boundary.</li><li>Using only mocks and never testing SQL.</li></ul>
+</section>
+
+<section id="next"><h2>What to Add Next</h2>
+<ol><li><strong>GET /v1/me:</strong> add user lookup by ID through every layer.</li><li><strong>Author drafts:</strong> list only the current author's private posts.</li><li><strong>Category administration:</strong> add admin-only CRUD; the table exists.</li><li><strong>Integration tests:</strong> establish confidence first.</li><li><strong>Refresh tokens:</strong> hashed, rotating, revocable sessions.</li><li><strong>Email workflows:</strong> verification and password reset.</li><li><strong>Media:</strong> object storage, with metadata in PostgreSQL.</li><li><strong>Cursor pagination and search:</strong> introduce as volume requires.</li><li><strong>Moderation and audit logs.</strong></li><li><strong>Outbox worker:</strong> reliable mail and event processing.</li></ol>
+<div class="note"><strong>Best first exercise</strong>Implement <code>GET /v1/me</code>: add <code>UserRepository.ByID</code>, SQL, service method, protected handler, route, and tests. It touches every layer without changing the schema.</div>
+</section>
+
+<section id="checklist"><h2>Final Checklist</h2>
+<div class="grid"><div class="panel"><h3>Before coding</h3><ul class="check"><li>Requirements and non-goals</li><li>Roles and permissions</li><li>API contract</li><li>Data relationships</li><li>Error behavior</li></ul></div><div class="panel"><h3>While coding</h3><ul class="check"><li>Validate boundaries</li><li>Rules in services</li><li>Parameterized SQL</li><li>Transactions where needed</li><li>Context and errors propagate</li><li>Ownership from claims</li></ul></div><div class="panel"><h3>Before merging</h3><ul class="check"><li>Format, test, vet</li><li>Migrate up and down</li><li>Test failure paths</li><li>Update docs and env example</li><li>No secrets committed</li></ul></div><div class="panel"><h3>Before production</h3><ul class="check"><li>TLS configured</li><li>Secrets rotatable</li><li>Rate limits</li><li>Backups restored</li><li>Logs, metrics, alerts</li><li>Rollback rehearsed</li></ul></div></div>
+</section>
+
+<section id="glossary"><h2>Glossary</h2>
+<p><strong>API:</strong> a defined way for systems to communicate. <strong>CRUD:</strong> create, read, update, delete. <strong>JWT:</strong> signed claims such as user ID, role, and expiration. <strong>Migration:</strong> versioned schema change. <strong>Repository:</strong> storage abstraction. <strong>Slug:</strong> URL-friendly title identifier. <strong>Transaction:</strong> operations that commit or roll back together. <strong>UUID:</strong> globally unique record ID. <strong>Dependency injection:</strong> passing dependencies into a component rather than constructing them inside.</p>
+<p class="muted">Read one section, open the named package, and trace one function. Connect each concept to a real request.</p>
+</section>
+</article>
+<footer>Go Blog Backend Handbook &middot; Self-contained and available offline</footer>
+</main></div>
+<button class="menu" id="menu" type="button" aria-label="Open table of contents" title="Table of contents">&#9776;</button>
+<script>
+const sidebar=document.getElementById("sidebar"),menu=document.getElementById("menu"),bar=document.getElementById("progress");
+const links=[...document.querySelectorAll("#toc a")],sections=[...document.querySelectorAll("section[id]")];
+menu.addEventListener("click",()=>sidebar.classList.toggle("open"));links.forEach(a=>a.addEventListener("click",()=>sidebar.classList.remove("open")));
+function update(){const max=document.documentElement.scrollHeight-innerHeight;bar.style.width=(max>0?scrollY/max*100:0)+"%";let current=sections[0]&&sections[0].id;for(const section of sections)if(section.getBoundingClientRect().top<=130)current=section.id;links.forEach(a=>a.classList.toggle("active",a.hash==="#"+current))}
+addEventListener("scroll",update,{passive:true});update();
+</script>
+</body>
+</html>
